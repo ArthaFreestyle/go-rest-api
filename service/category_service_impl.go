@@ -1,13 +1,13 @@
 package service
 
 import (
+	"ArthaFreestyle/go-rest-api/exception"
 	"ArthaFreestyle/go-rest-api/helper"
 	"ArthaFreestyle/go-rest-api/model/domain"
 	"ArthaFreestyle/go-rest-api/model/web"
 	"ArthaFreestyle/go-rest-api/repository"
 	"context"
 	"database/sql"
-
 	"github.com/go-playground/validator"
 )
 
@@ -56,7 +56,7 @@ func (service *CategoryServiceImpl) Update(ctx context.Context, request web.Cate
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, request.Id)
 	if err != nil {
-		panic(err)
+		panic(exception.NewNotFoundError(err.Error()))
 	}
 	category.Name = request.Name
 	category = service.CategoryRepository.Update(ctx, tx, category)
@@ -71,10 +71,10 @@ func (service *CategoryServiceImpl) Delete(ctx context.Context, categoryId int64
 	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
+	
 	if err != nil {
-		panic(err)
+		panic(exception.NewNotFoundError(err.Error()))
 	}
-
 	service.CategoryRepository.Delete(ctx, tx, category.Id)
 }
 
@@ -87,7 +87,7 @@ func (service *CategoryServiceImpl) FindById(ctx context.Context, categoryId int
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
 	if err != nil {
-		panic(err)
+		panic(exception.NewNotFoundError(err.Error()))
 	}
 	return helper.ToCategoryResponse(category)
 }

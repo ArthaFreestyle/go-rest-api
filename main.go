@@ -1,13 +1,15 @@
 package main
 
 import (
-	"ArthaFreestyle/go-rest-api/controller"
 	"ArthaFreestyle/go-rest-api/app"
+	"ArthaFreestyle/go-rest-api/controller"
+	"ArthaFreestyle/go-rest-api/exception"
 	"ArthaFreestyle/go-rest-api/repository"
 	"ArthaFreestyle/go-rest-api/service"
+	"net/http"
+
 	"github.com/go-playground/validator"
 	"github.com/julienschmidt/httprouter"
-	"net/http"
 )
 
 func main() {
@@ -24,6 +26,7 @@ func main() {
 	router.POST("/api/categories",categoryController.Create)
 	router.PUT("/api/categories/:categoryId",categoryController.Update)
 	router.DELETE("/api/categories/:categoryId",categoryController.Delete)
+	router.PanicHandler = exception.ErrorHandler
 
 	server := http.Server{
 		Addr: "localhost:3000",

@@ -60,7 +60,7 @@ func (repository *CategoryRepositoryImpl) FindById(ctx context.Context,tx *sql.T
 		}
 		return category,nil
 	}else{
-		return category,errors.New("category is not found")
+		return category, errors.New("category is not found")
 	}
 }
 
