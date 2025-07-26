@@ -9,6 +9,10 @@ import (
 
 type CategoryRepositoryImpl struct {}
 
+func NewCategoryRepository() CategoryRepository{
+	return &CategoryRepositoryImpl{}
+}
+
 func (repository *CategoryRepositoryImpl) Save(ctx context.Context,tx *sql.Tx,category domain.Category)domain.Category{
 	SQL := "insert into customer(name) values (?)"
 	result,err := tx.ExecContext(ctx,SQL,category.Name)
@@ -32,16 +36,16 @@ func (repository *CategoryRepositoryImpl) Update(ctx context.Context,tx *sql.Tx,
 	return category
 }
 
-func (repository *CategoryRepositoryImpl) Delete(ctx context.Context,tx *sql.Tx,category domain.Category){
+func (repository *CategoryRepositoryImpl) Delete(ctx context.Context,tx *sql.Tx,categoryId int64){
 	SQL := "delete from category where id = ?"
-	_,err := tx.ExecContext(ctx,SQL,category.Id)
+	_,err := tx.ExecContext(ctx,SQL,categoryId)
 	if err != nil{
 		panic(err)
 	}
 	
 }
 
-func (repository *CategoryRepositoryImpl) FindById(ctx context.Context,tx *sql.Tx,categoryId int) (domain.Category,error){
+func (repository *CategoryRepositoryImpl) FindById(ctx context.Context,tx *sql.Tx,categoryId int64) (domain.Category,error){
 	SQL := "select id,name from category where id = ?"
 	rows,err := tx.QueryContext(ctx,SQL,categoryId)
 	if err != nil{
