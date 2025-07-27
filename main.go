@@ -4,6 +4,7 @@ import (
 	"ArthaFreestyle/go-rest-api/app"
 	"ArthaFreestyle/go-rest-api/controller"
 	"ArthaFreestyle/go-rest-api/exception"
+	"ArthaFreestyle/go-rest-api/middleware"
 	"ArthaFreestyle/go-rest-api/repository"
 	"ArthaFreestyle/go-rest-api/service"
 	"net/http"
@@ -28,9 +29,10 @@ func main() {
 	router.DELETE("/api/categories/:categoryId",categoryController.Delete)
 	router.PanicHandler = exception.ErrorHandler
 
+
 	server := http.Server{
 		Addr: "localhost:3000",
-		Handler: router,
+		Handler: middleware.NewMiddleware(router),
 	}
 
 	err := server.ListenAndServe()
