@@ -3,14 +3,13 @@ package main
 import (
 	"ArthaFreestyle/go-rest-api/app"
 	"ArthaFreestyle/go-rest-api/controller"
-	"ArthaFreestyle/go-rest-api/exception"
 	"ArthaFreestyle/go-rest-api/middleware"
+
 	"ArthaFreestyle/go-rest-api/repository"
 	"ArthaFreestyle/go-rest-api/service"
 	"net/http"
 
 	"github.com/go-playground/validator"
-	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -20,19 +19,11 @@ func main() {
 	categoryService := service.NewCategoryService(categoryRepository,db,validate)
 	categoryController := controller.NewCategoryController(categoryService)
 
-	router := httprouter.New()
-
-	router.GET("/api/categories",categoryController.FindAll)
-	router.GET("/api/categories/:categoryId",categoryController.FindById)
-	router.POST("/api/categories",categoryController.Create)
-	router.PUT("/api/categories/:categoryId",categoryController.Update)
-	router.DELETE("/api/categories/:categoryId",categoryController.Delete)
-	router.PanicHandler = exception.ErrorHandler
-
+	router := app.NewRouter(categoryController)
 
 	server := http.Server{
 		Addr: "localhost:3000",
-		Handler: middleware.NewMiddleware(router),
+		Handler: middleware.NewAuthMiddleware(router),
 	}
 
 	err := server.ListenAndServe()

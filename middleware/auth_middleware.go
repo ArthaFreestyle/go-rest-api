@@ -10,7 +10,7 @@ type AuthMiddleware struct {
 	Handler http.Handler
 }
 
-func NewMiddleware(handler http.Handler) *AuthMiddleware {
+func NewAuthMiddleware(handler http.Handler) *AuthMiddleware {
 	return &AuthMiddleware{Handler: handler}
 }
 
